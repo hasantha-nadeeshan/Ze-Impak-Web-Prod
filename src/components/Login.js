@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import  { conect } from "react-redux";
+import  { connect } from "react-redux";
 
 const Login =(props) => {
     return (
