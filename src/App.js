@@ -3,6 +3,7 @@ import './App.css';
 import Login from './components/Login';
 import Header from './components/Header';
 import Home from './components/Home';
+import { Register } from './components/Register';
 
 function App() {
   return (
@@ -15,6 +16,9 @@ function App() {
           <Route path="/home">
             <Header/>
             <Home/>
+          </Route>
+          <Route path="/register">
+            <Register/>
           </Route>
           
         </Switch>
