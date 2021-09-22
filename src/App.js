@@ -16,6 +16,7 @@ function App() {
             <Header/>
             <Home/>
           </Route>
+          
         </Switch>
       </Router>
     </div>

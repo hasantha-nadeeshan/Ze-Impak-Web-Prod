@@ -1,4 +1,4 @@
-import  {auth} from "../config/Firebase"
+import  {auth, provider} from "../config/Firebase"
 
 export function signInAPI(){
     return (dispatch) => {
