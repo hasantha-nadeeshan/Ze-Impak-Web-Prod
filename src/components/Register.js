@@ -25,6 +25,18 @@ const useStyles = makeStyles({
         marginTop: 10,
         marginBottom:12,
         fontSize: 50
+    },
+    date: {
+        display: 'none',
+        ['@media (min-width:780px)']: {
+            display: 'block'
+        }
+    },
+    date2: {
+        display: 'block',
+        ['@media (min-width:780px)']: {
+            display: 'none'
+        }
     }
 })
 
@@ -78,20 +90,24 @@ export const Register = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <div className={classes.date}>
                                 <DesktopDatePicker
                                     label="Date desktop"
                                     inputFormat="MM/dd/yyyy"
                                     value={val}
                                     onChange={handleChange}
                                     renderInput={(params) => <TextField {...params} fullWidth/>}
-                                />
+                                    />
+                                    </div>
+                                    <div className={classes.date2}>
                                 <MobileDatePicker
                                     label="Date mobile"
                                     inputFormat="MM/dd/yyyy"
                                     value={val}
                                     onChange={handleChange}
-                                    renderInput={(params) => <TextField {...params}  fullWidth/>}
+                                    renderInput={(params) => <TextField {...params}  fullWidth />}
                                 />
+                                </div>
                                 </LocalizationProvider>
                         </Grid>
                     </Grid>
