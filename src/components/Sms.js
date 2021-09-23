@@ -130,9 +130,7 @@ const Header = styled.div`
         color: red;
         outline: none;
         border: none;
-        p{
-            colou
-        }
+        
 
     }
 
