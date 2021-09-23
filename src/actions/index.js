@@ -36,6 +36,7 @@ export const submitNumber = (payload) => {
     }
 }
 export const datasave = (payload,uid) => {
+    console.log(payload,"datasave");
     return ({
         type: USER_DATA,
         firstName: payload.firstName,
@@ -46,7 +47,8 @@ export const datasave = (payload,uid) => {
         birthday: payload.birthday,
         gender: payload.gender,
         code: payload.code,
-        uid: uid
+        uid: uid,
+        sharedImg:payload.sharedImg,
 
     })
 }
@@ -125,6 +127,7 @@ export function userSaveAPI(payload,uid) {
                 birthday: payload.birthday,
                 gender: payload.gender,
                 uid:uid,
+                sharedImg:payload.sharedImg,
         }).then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
         })
@@ -166,6 +169,8 @@ export function getUserAuth() {
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 dispatch(setUser(user));
+                dispatch(userDataRead(user.uid));
+
             }
         });
     };
@@ -179,9 +184,9 @@ export function signOutAPI() {
     };
 }
 
+
 export function postArticleAPI(payload) {
     return (dispatch) => {
-        dispatch(setLoading(true));
         if(payload.image != ""){
             const upload = storage
                 .ref(`images/${payload.image.name}`)
@@ -210,7 +215,7 @@ export function postArticleAPI(payload) {
                 
 
             });
-            dispatch(setLoading(false));
+
         }
         );
     } else if (payload.video){
@@ -225,11 +230,41 @@ export function postArticleAPI(payload) {
                 sharedImg :"",
                 comments:0,
                 description: payload.description,
-        });
-        dispatch(setLoading(false));
+        })
     }
 };
 
+}
+
+export function postDpAPI(payload) {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        if(payload.image != ""){
+            const upload = storage
+                .ref(`userDp/${payload.image.name}`)
+                .put(payload.image);
+            upload.on('state_changed', (snapshot)=>{
+                const progress = 
+                    (snapshot.bytesTransferred / snapshot.totalBytes) *100;
+            console.log(`Progress: ${progress}%`);
+            if (snapshot.state === 'RUNNING'){
+                console.log(`Progress: ${progress}`);
+            }
+        },error => console.log(error.code),
+        async ()=> {
+            const downloadURL = await upload.snapshot.ref.getDownloadURL();
+            db.collection("users").doc(payload.uid).update({
+                sharedImg : downloadURL,
+                uploaded:payload.timestamp,
+                
+
+            });
+            dispatch(setLoading(false));
+            alert("Successfully changed");
+        }
+        );
+    } 
+};
 }
 
 export function getArticlesAPI(){

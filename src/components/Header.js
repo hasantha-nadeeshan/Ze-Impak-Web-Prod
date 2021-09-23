@@ -55,8 +55,8 @@ const Header = (props) => {
                         <User>
                             <a>
                                 {
-                                    props.user && props.user.photoURL ? 
-                                        (<img src={props.user.photoURL} alt=""/>)
+                                    props.user.firstName && props.user.sharedImg ? 
+                                        (<img src={props.user.sharedImg} alt=""/>)
                                         :
                                         (<img src="/images/user.svg" alt="" />)
                                 }
@@ -268,7 +268,7 @@ const Work = styled(User)`
 
 const mapStateToProps = (state) => {
     return {
-        user:state.userState.user,
+        user:state.registerState,
     };
 };
 

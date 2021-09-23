@@ -8,9 +8,17 @@ const Login =(props) => {
 
     const history = useHistory();
 
-    const handleRegister = ()=>{
-        history.push("/register");
+    const handleRegister = (page)=>{
+        if(page === "reg"){
+            history.push("/register");
+        }
+        else if (page === "sign"){
+            history.push("/signin");
+        }
+        
     }
+
+   
     return (
         <Container>
             {
@@ -21,11 +29,14 @@ const Login =(props) => {
                     <img src="/images/login-logo.svg" alt="" />
                 </a>
                 <div>
-                    <Join>Join now</Join>
+                    <Join
+                        onClick = {() => history.push('/register')}
+                    >Join now
+                    </Join>
                     <SignIn
-                        onClick = {handleRegister}
+                        onClick = {() => history.push('/signin')}
                     >
-                        Sign In
+                        Log In
                     </SignIn>
                 </div>
             </Nav>

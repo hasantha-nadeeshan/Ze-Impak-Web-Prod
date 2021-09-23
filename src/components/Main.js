@@ -40,9 +40,9 @@ const Main = (props) => {
             <Container>
                 <ShareBox>
                     <div>
-                    { props.user && props.user.photoURL ? 
-                        (<img src={props.user.photoURL}/>)
-                        :(<img src="/images/user.svg" alt="" />)
+                    { props.user.firstName && props.user.sharedImg ? 
+                        (<img src={props.user.sharedImg}/>)
+                        :(<img src="./images/user.svg" alt="" />)
                     }    
                         <button 
                             onClick={handleClick}
@@ -382,7 +382,8 @@ const Content = styled.div`
 const mapStateToProps = (state) => {
     return {
         loading: state.articleState.loading,
-        user:state.userState.user,
+       // user:state.userState.user,
+        user: state.registerState,
         articles: state.articleState.articles,
     }
 }

@@ -5,7 +5,7 @@ const Rightside = (props) => {
     <Container>
       <FollowCard>
         <Title>
-          <h2>Add to your feed</h2>
+          <h2>Investor's choice</h2>
           <img src="/images/feed-icon.svg" alt="" />
         </Title>
 
@@ -15,8 +15,8 @@ const Rightside = (props) => {
               <Avatar />
             </a>
             <div>
-              <span>#Linkedin</span>
-              <button>Follow</button>
+              <span>Packages</span>
+              <button>Subscribe</button>
             </div>
           </li>
           <li>
@@ -24,8 +24,8 @@ const Rightside = (props) => {
               <Avatar />
             </a>
             <div>
-              <span>#Video</span>
-              <button>Follow</button>
+              <span>Get notified</span>
+              <button>Filter Posts</button>
             </div>
           </li>
         </FeedList>

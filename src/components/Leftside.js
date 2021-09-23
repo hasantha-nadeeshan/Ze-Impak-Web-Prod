@@ -1,21 +1,94 @@
+import { useState,useEffect} from 'react';
 import { connect } from "react-redux";
 import styled from "styled-components";
+import firebase from 'firebase';
+import  { postDpAPI } from '../actions';
 
 const Leftside = (props) => {
+  console.log("im in left",props.user);
+  const [shareImage,setShareImage] = useState("");
+  const [imageLink,setImageLink] = useState(props.user.sharedImg);
+
+  useEffect(() =>{
+    setImageLink(props.user.sharedImg);
+  },[])
+
+  const handleChange =(e) =>{
+    const image = e.target.files[0];
+    
+    if (image === '' || image === undefined ){
+        alert("not an image, the file is a ${typeof image} ");
+        return;
+    }
+
+    setShareImage(image);
+
+  }
+  const reset=()=>{
+    setShareImage("");
+  }
+  const postArticale = (e) =>{
+    e.preventDefault();
+    if (e.target !== e.currentTarget){
+        return;
+
+    }
+
+    const payload = {
+        image: shareImage,
+        timestamp: firebase.firestore.Timestamp.now(),
+        uid:props.user.uid,
+    };
+
+    props.postDp(payload);
+    reset(e);
+
+  }
+
   return (
     <Container>
       <ArtCard>
         <UserInfo>
           <CardBackground />
           <a>
-            <Photo />
-            <Link>Welcome, {props.user ? props.user.displayName : "there"}</Link>
+            <Photo>
+              {
+                props.user.sharedImg ? (
+                  <img src={props.user.sharedImg}/>
+                )
+                :
+                (
+                  <img src="./images/user.svg"/>
+                )
+              }
+              
+            </Photo>
+              
+            <Link>Welcome, {props.user.firstName ? props.user.firstName : "there"}</Link>
           </a>
           <a>
-            <AddPhotoText>Add a photo</AddPhotoText>
+            <AddPhotoText>
+            <input 
+              type="file"  
+              accept ="image/gif, image/jpeg, image/png, image/jpg"
+              name = "image" 
+              id="file"
+              style = {{ display: "none" }}
+              onChange={handleChange}
+            />
+            <p>
+              <label htmlFor="file">
+                Select an image to share
+              </label>
+            </p>
+            <button onClick={(event)=>postArticale(event)}>
+              Upload
+            </button>
+                            
+            </AddPhotoText>
           </a>
         </UserInfo>
-        <Widget>
+        {/* <Widget>
           <a>
             <div>
               <span>Connections</span>
@@ -29,10 +102,10 @@ const Leftside = (props) => {
             <img src="/images/item-icon.svg" alt="" />
             My Items
           </span>
-        </Item>
+        </Item> */}
       </ArtCard>
 
-      <CommunityCard>
+      {/* <CommunityCard>
         <a>
           <span>Groups</span>
         </a>
@@ -48,7 +121,7 @@ const Leftside = (props) => {
         <a>
           <span>Discover more</span>
         </a>
-      </CommunityCard>
+      </CommunityCard> */}
     </Container>
   );
 };
@@ -86,7 +159,7 @@ const CardBackground = styled.div`
 
 const Photo = styled.div`
   box-shadow: none;
-  background-image: url("/images/photo.svg");
+  background-image: url({imageLink});
   width: 72px;
   height: 72px;
   box-sizing: border-box;
@@ -95,9 +168,16 @@ const Photo = styled.div`
   background-position: center;
   background-size: 60%;
   background-repeat: no-repeat;
-  border: 2px solid white;
   margin: -38px auto 12px;
   border-radius: 50%;
+
+  img {
+    width: 72px;
+    height: 72px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+  }
 `;
 
 const Link = styled.div`
@@ -199,7 +279,15 @@ const CommunityCard = styled(ArtCard)`
 
 const mapStateToProps = (state) =>{
   return{
-    user: state.userState.user,
+    //user: state.userState.user,
+    user: state.registerState,
+
   }
 }
-export default connect(mapStateToProps)(Leftside);
+const mapDispatchToProps = (dispatch) =>({
+
+  postDp : (payload) => dispatch(postDpAPI(payload))
+
+});
+
+export default connect(mapStateToProps,mapDispatchToProps)(Leftside);
