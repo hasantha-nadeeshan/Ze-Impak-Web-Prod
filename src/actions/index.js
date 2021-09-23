@@ -1,12 +1,22 @@
 import { auth, provider, storage } from "../config/Firebase";
 import db from "../config/Firebase";
-import { SET_USER, SUBMIT_USER, USER_DATA, SUBMIT_NUMBER } from './actionType';
+import { SET_USER, SUBMIT_USER, USER_DATA, SUBMIT_NUMBER, SET_LOADING_STATUS, GET_ARTICLES } from './actionType';
 import axios from 'axios';
 
 export const setUser = (payload) => ({
     type: SET_USER,
     user: payload,
 
+});
+
+export const setLoading = (status)=>({
+    type: SET_LOADING_STATUS,
+    status:status,
+});
+
+export const getArticles = (payload)=>({
+    type: GET_ARTICLES,
+    payload: payload,
 })
 
 //action to send number verification
@@ -25,7 +35,7 @@ export const submitNumber = (payload) => {
             })
     }
 }
-export const datasave = (payload) => {
+export const datasave = (payload,uid) => {
     return ({
         type: USER_DATA,
         firstName: payload.firstName,
@@ -35,7 +45,8 @@ export const datasave = (payload) => {
         email: payload.email,
         birthday: payload.birthday,
         gender: payload.gender,
-        code: payload.code
+        code: payload.code,
+        uid: uid
 
     })
 }
@@ -76,8 +87,9 @@ export function signUpCustom(payloada, email, password) {
             .createUserWithEmailAndPassword(email, password)
             .then((payload) => {
                 console.log(payload.user);
-                dispatch(datasave(payloada));
+                dispatch(datasave(payloada,payload.user.uid));
                 dispatch(setUser(payload.user));
+                dispatch(userSaveAPI(payloada,payload.user.uid));
             })
             .catch((error) => alert(error.message));
     };
@@ -94,15 +106,17 @@ export function signInCustom(email, password) {
             .then((payload) => {
                 console.log('HUHI', payload.user.uid);
                 dispatch(setUser(payload.user));
+                dispatch(userDataRead(payload.user.uid));
             })
             .catch((error) => alert("Enter correct email and password"));
     };
 }
 
 ////call api
-export function userDataWrite(payload) {
+export function userSaveAPI(payload,uid) {
     return () => {
-        db.collection('users').add({
+        console.log('paylod uid',uid)
+        db.collection('users').doc(uid).set({
                 firstName: payload.firstName,
                 lastName: payload.lastName,
                 userType: payload.userType,
@@ -110,6 +124,7 @@ export function userDataWrite(payload) {
                 email: payload.email,
                 birthday: payload.birthday,
                 gender: payload.gender,
+                uid:uid,
         }).then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
         })
@@ -120,10 +135,11 @@ export function userDataWrite(payload) {
 }
 
 export function userDataRead(uid) {
-    return () => {
+    return (dispatch) => {
         db.collection('users').doc(uid).get().then((doc) => {
             if (doc.exists) {
                 console.log("Document data:", doc.data());
+                dispatch(datasave(doc.data(),uid));
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
@@ -165,6 +181,7 @@ export function signOutAPI() {
 
 export function postArticleAPI(payload) {
     return (dispatch) => {
+        dispatch(setLoading(true));
         if(payload.image != ""){
             const upload = storage
                 .ref(`images/${payload.image.name}`)
@@ -193,7 +210,7 @@ export function postArticleAPI(payload) {
                 
 
             });
-
+            dispatch(setLoading(false));
         }
         );
     } else if (payload.video){
@@ -208,8 +225,22 @@ export function postArticleAPI(payload) {
                 sharedImg :"",
                 comments:0,
                 description: payload.description,
-        })
+        });
+        dispatch(setLoading(false));
     }
 };
 
+}
+
+export function getArticlesAPI(){
+    return (dispatch) => {
+        let payload;
+        db.collection('articles')
+        .orderBy("actor.date","desc")
+        .onSnapshot((snapshot)=>{
+            payload = snapshot.docs.map((doc)=> doc.data());
+            console.log(payload);
+            dispatch(getArticles(payload));
+        });
+    };
 }

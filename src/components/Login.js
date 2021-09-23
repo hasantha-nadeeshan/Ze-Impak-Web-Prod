@@ -2,8 +2,15 @@ import styled from 'styled-components';
 import  { connect } from "react-redux";
 import { signInAPI } from "../actions";
 import { Redirect } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 const Login =(props) => {
+
+    const history = useHistory();
+
+    const handleRegister = ()=>{
+        history.push("/register");
+    }
     return (
         <Container>
             {
@@ -15,7 +22,11 @@ const Login =(props) => {
                 </a>
                 <div>
                     <Join>Join now</Join>
-                    <SignIn>Sign In</SignIn>
+                    <SignIn
+                        onClick = {handleRegister}
+                    >
+                        Sign In
+                    </SignIn>
                 </div>
             </Nav>
             <Section>
