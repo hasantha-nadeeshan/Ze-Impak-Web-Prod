@@ -18,7 +18,7 @@ import Button from '@mui/material/Button';
 import { Redirect } from 'react-router';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { signUpCustom, datasave, postNumber,submitNumber } from "../actions";
+import { signUpCustom, datasave, postNumber,submitNumber,userSaveAPI } from "../actions";
 import FormLabel from '@mui/material/FormLabel';
 const useStyles = makeStyles({
     boxContainer: {
@@ -115,7 +115,8 @@ const Register = (props) => {
         props.postNumber(code,values)
     }
     const creatAccount = () => {
-        props.signUp(values,values.email,values.password)
+        props.signUp(values,values.email,values.password);
+        
     }
     return (
         <div className={classes.boxContainer}>
@@ -210,7 +211,7 @@ const Register = (props) => {
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <div className={classes.date}>
                                     <DesktopDatePicker
-                                        label="Date desktop"
+                                        label="Date of birth"
                                         inputFormat="MM/dd/yyyy"
                                         value={values.birthday}
                                         onChange={handleChangeGen}
@@ -302,7 +303,8 @@ const mapDispatchToProps = (dispatch) => ({
     signUp: (payload,email, password) => dispatch(signUpCustom(payload,email, password)),
     datasave: (payload) => dispatch(datasave(payload)),
     postNumber: (number) => dispatch(postNumber(number)),
-    submitNumber:(payload) => dispatch(submitNumber(payload))
+    submitNumber:(payload) => dispatch(submitNumber(payload)),
+    userSave : (payload)=> dispatch(userSaveAPI(payload))
 });
 
 

@@ -2,18 +2,19 @@ import {SUBMIT_USER,USER_DATA,SUBMIT_NUMBER,PREFERENCE} from '../actions/actionT
 const INITIAL_STATE = {
     verification: null,
     number:false,
-    firstName: 'ex:Asanka',
-    lastName: 'ex:Kumara',
-    userType: 'Investor',
-    mobile: '07700000',
-    email: 'sample@clique.com',
-    birthday: new Date('2014-08-18T21:11:54'),
+    firstName: '',
+    lastName: '',
+    userType: '',
+    mobile: '',
+    email: '',
+    birthday: null,
     gender: 'male',
-    code: '00000',
+    code: '',
     preference: {ICT:{
         field: "ICT",
         sms:true
-    }}
+    }},
+    uid:null
 };
 
 const registerReducer = (state = INITIAL_STATE, action) =>{
@@ -31,7 +32,7 @@ const registerReducer = (state = INITIAL_STATE, action) =>{
                     number:action.number,
                 };
         case USER_DATA:
-            console.log("updating..")
+            console.log("updating..",action);
             return {
                 ...state,
                 firstName: action.firstName,
@@ -41,6 +42,7 @@ const registerReducer = (state = INITIAL_STATE, action) =>{
                 email: action.email,
                 birthday: action.birthday,
                 gender: action.gender,
+                uid:action.uid,
             };
         case PREFERENCE:
             console.log("pref")
@@ -53,6 +55,7 @@ const registerReducer = (state = INITIAL_STATE, action) =>{
                         sms:action.sms
                     }
                 }
+                
             }
         default:
             return state;
