@@ -196,7 +196,6 @@ const mapStateToProps = (state) =>{
 
 
 const mapDispatchToProps = (dispatch) => ({
-
         signIn: ()=> dispatch(signInAPI()),
 });
 
