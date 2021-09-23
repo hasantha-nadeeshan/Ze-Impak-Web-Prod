@@ -191,6 +191,7 @@ const Register = (props) => {
                                 variant='outlined'
                                 label="new password"
                                 name="password"
+                                type="password" 
                                 value={values.password}
                                 onChange={handleInputChange}
                             />

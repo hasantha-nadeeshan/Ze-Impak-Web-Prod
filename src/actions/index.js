@@ -84,6 +84,19 @@ export function signUpCustom(email, password) {
 
 }
 
+export function signInCustom(email, password) {
+    console.log('signInCustom')
+    return (dispatch) => {
+        auth
+            .signInWithEmailAndPassword(email, password)
+            .then((payload) => {
+                console.log(payload);
+                dispatch(setUser(payload.user));
+            })
+            .catch((error) => alert("Enter correct email and password"));
+    };
+}
+
 ////call api
 
 
@@ -97,13 +110,11 @@ export function signInAPI() {
             })
             .catch((error) => alert(error.message));
     };
-
 }
 
 export function getUserAuth() {
     return (dispatch) => {
         auth.onAuthStateChanged(async (user) => {
-
             if (user) {
                 dispatch(setUser(user));
             }

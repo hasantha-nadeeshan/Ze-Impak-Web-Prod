@@ -1,25 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, } from 'react';
 import { connect } from "react-redux";
-import { useSelector } from 'react-redux';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
-import MobileDatePicker from '@mui/lab/MobileDatePicker';
 import { makeStyles } from '@mui/styles';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import { Redirect } from 'react-router';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { signUpCustom, datasave, postNumber, submitNumber } from "../actions";
-import FormLabel from '@mui/material/FormLabel';
+import { signInCustom } from "../actions";
 const useStyles = makeStyles({
     boxContainer: {
         display: 'block',
@@ -38,8 +26,6 @@ const useStyles = makeStyles({
         fontSize: 50
     }
 })
-
-
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(2),
@@ -47,8 +33,24 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const loginValues = {
+    email: '',
+    password: ''
+}
+
 const SigninForm = (props) => {
     const classes = useStyles();
+    const [values, setValues] = useState(loginValues)
+    const handleInputChange = e => {
+        const { name, value } = e.target
+        setValues({
+            ...values,
+            [name]: value
+        })
+    }
+    const verifi = () => {
+        props.signIn(values.email,values.password)
+    }
     return (
         <div className={classes.boxContainer}>
             {
@@ -76,6 +78,8 @@ const SigninForm = (props) => {
                                 variant='outlined'
                                 label="E-mail"
                                 name="email"
+                                value={values.email}
+                                onChange={handleInputChange}
 
                             />
                         </Grid>
@@ -83,15 +87,18 @@ const SigninForm = (props) => {
                             <TextField
                                 fullWidth
                                 required
+                                type="password" 
                                 variant='outlined'
                                 label="password"
                                 name="password"
-
+                                value={values.password}
+                                onChange={handleInputChange}
                             />
                         </Grid>
 
                         <Grid item xs={12}>
                             <Button
+                                onClick={verifi}
                                 variant="contained"
                             >Login</Button>
                         </Grid>
@@ -108,12 +115,10 @@ const SigninForm = (props) => {
 const mapStateToProps = (state) => {
     return {
         user: state.userState.user,
-        verification: state.registerState.verification,
-        number: state.registerState.number,
     }
 };
 const mapDispatchToProps = (dispatch) => ({
-    
+    signIn: (email, password) => dispatch(signInCustom(email, password)),
 });
 
 
