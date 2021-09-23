@@ -101,7 +101,6 @@ const Register = (props) => {
         Object.values(values).forEach((element) => {
             if (!element) {
                 template = false;
-                console.log(values)
             }
         });
         if (template) {

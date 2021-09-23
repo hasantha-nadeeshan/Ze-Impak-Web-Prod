@@ -1,4 +1,4 @@
-import {SUBMIT_USER,USER_DATA,SUBMIT_NUMBER} from '../actions/actionType'
+import {SUBMIT_USER,USER_DATA,SUBMIT_NUMBER,PREFERENCE} from '../actions/actionType'
 const INITIAL_STATE = {
     verification: null,
     number:false,
@@ -12,6 +12,12 @@ const INITIAL_STATE = {
     code:null,
     uid:null,
     sharedImg:"",
+    code: '',
+    preference: {ICT:{
+        field: "ICT",
+        sms:true
+    }},
+   
 };
 
 const registerReducer = (state = INITIAL_STATE, action) =>{
@@ -43,9 +49,23 @@ const registerReducer = (state = INITIAL_STATE, action) =>{
                 gender: action.gender,
                 uid:action.uid,
                 sharedImg:action.sharedImg,
+            };
+        case PREFERENCE:
+            console.log("pref")
+            return {
+                ...state,
+                preference: {
+                    ...state.preference,
+                    [action.field]: {
+                        field: action.field,
+                        sms:action.sms
+                    }
+                }
+                
             }
         default:
             return state;
+        
     }
 }
 
