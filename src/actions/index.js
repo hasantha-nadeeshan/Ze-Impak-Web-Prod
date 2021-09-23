@@ -1,5 +1,6 @@
 import { auth, provider } from "../config/Firebase"
-import { SET_USER, SUBMIT_USER, USER_DATA ,SUBMIT_NUMBER} from './actionType';
+import db from "../config/Firebase"
+import { SET_USER, SUBMIT_USER, USER_DATA, SUBMIT_NUMBER } from './actionType';
 import axios from 'axios';
 
 export const setUser = (payload) => ({
@@ -24,7 +25,6 @@ export const submitNumber = (payload) => {
             })
     }
 }
-
 export const datasave = (payload) => {
     return ({
         type: USER_DATA,
@@ -54,7 +54,7 @@ export const number = () => {
     })
 }
 //api request to number verification
-export const postNumber = (code,payload) => {
+export const postNumber = (code, payload) => {
     console.log('signUpCustom')
     const url = 'http://35.200.174.85/number'
     return (dispatch) => {
@@ -70,13 +70,13 @@ export const postNumber = (code,payload) => {
     }
 }
 
-export function signUpCustom(email, password) {
-    console.log('signUpCustom')
+export function signUpCustom(payloada, email, password) {
     return (dispatch) => {
         auth
             .createUserWithEmailAndPassword(email, password)
             .then((payload) => {
-                console.log(payload);
+                console.log(payload.user);
+                dispatch(datasave(payloada));
                 dispatch(setUser(payload.user));
             })
             .catch((error) => alert(error.message));
@@ -84,13 +84,15 @@ export function signUpCustom(email, password) {
 
 }
 
+
+
 export function signInCustom(email, password) {
     console.log('signInCustom')
     return (dispatch) => {
         auth
             .signInWithEmailAndPassword(email, password)
             .then((payload) => {
-                console.log(payload);
+                console.log('HUHI', payload.user.uid);
                 dispatch(setUser(payload.user));
             })
             .catch((error) => alert("Enter correct email and password"));
@@ -98,8 +100,39 @@ export function signInCustom(email, password) {
 }
 
 ////call api
+export function userDataWrite(payload) {
+    return () => {
+        db.collection('users').add({
+                firstName: payload.firstName,
+                lastName: payload.lastName,
+                userType: payload.userType,
+                mobile: payload.mobile,
+                email: payload.email,
+                birthday: payload.birthday,
+                gender: payload.gender,
+        }).then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+        })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+            });
+    }
+}
 
-
+export function userDataRead(uid) {
+    return () => {
+        db.collection('users').doc(uid).get().then((doc) => {
+            if (doc.exists) {
+                console.log("Document data:", doc.data());
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+    }
+}
 export function signInAPI() {
     return (dispatch) => {
         auth
