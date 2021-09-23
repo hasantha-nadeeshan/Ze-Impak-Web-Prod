@@ -1,4 +1,4 @@
-import {SUBMIT_USER,USER_DATA,SUBMIT_NUMBER} from '../actions/actionType'
+import {SUBMIT_USER,USER_DATA,SUBMIT_NUMBER,PREFERENCE} from '../actions/actionType'
 const INITIAL_STATE = {
     verification: null,
     number:false,
@@ -9,7 +9,11 @@ const INITIAL_STATE = {
     email: 'sample@clique.com',
     birthday: new Date('2014-08-18T21:11:54'),
     gender: 'male',
-    code:'00000'
+    code: '00000',
+    preference: {ICT:{
+        field: "ICT",
+        sms:true
+    }}
 };
 
 const registerReducer = (state = INITIAL_STATE, action) =>{
@@ -37,9 +41,22 @@ const registerReducer = (state = INITIAL_STATE, action) =>{
                 email: action.email,
                 birthday: action.birthday,
                 gender: action.gender,
+            };
+        case PREFERENCE:
+            console.log("pref")
+            return {
+                ...state,
+                preference: {
+                    ...state.preference,
+                    [action.field]: {
+                        field: action.field,
+                        sms:action.sms
+                    }
+                }
             }
         default:
             return state;
+        
     }
 }
 

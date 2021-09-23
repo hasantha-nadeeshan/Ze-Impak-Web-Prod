@@ -101,7 +101,6 @@ const Register = (props) => {
         Object.values(values).forEach((element) => {
             if (!element) {
                 template = false;
-                console.log(values)
             }
         });
         if (template) {
@@ -300,7 +299,7 @@ const mapStateToProps = (state) => {
 
 
 const mapDispatchToProps = (dispatch) => ({
-    signUp: (email, password) => dispatch(signUpCustom(email, password)),
+    signUp: (payload,email, password) => dispatch(signUpCustom(payload,email, password)),
     datasave: (payload) => dispatch(datasave(payload)),
     postNumber: (number) => dispatch(postNumber(number)),
     submitNumber:(payload) => dispatch(submitNumber(payload))

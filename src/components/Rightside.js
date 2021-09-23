@@ -1,6 +1,35 @@
 import styled from "styled-components";
-
+import Sms from './Sms';
+import Packages from './Packages';
+import { useState } from 'react';
+const sms = "SMS SERVICE"
 const Rightside = (props) => {
+  const [showModal, setShowModal] = useState("close");
+  const [toggle,setToggle] = useState(true);
+  const handleClick = (e) =>{
+    e.preventDefault();
+    const btn = e.target.outerText
+    if (btn === sms) {
+      setToggle(true)
+    } else {
+      setToggle(false)
+    }
+    if(e.target !== e.currentTarget){
+        return;
+    }
+
+    switch(showModal){
+        case "open":
+            setShowModal("close");
+            break;
+        case "close":
+            setShowModal("open");
+            break;
+        default:
+            setShowModal("close");
+            break;
+    }
+}
   return (
     <Container>
       <FollowCard>
@@ -16,7 +45,7 @@ const Rightside = (props) => {
             </a>
             <div>
               <span>#Linkedin</span>
-              <button>Follow</button>
+              <button onClick={handleClick} >{sms}</button>
             </div>
           </li>
           <li>
@@ -25,7 +54,7 @@ const Rightside = (props) => {
             </a>
             <div>
               <span>#Video</span>
-              <button>Follow</button>
+              <button onClick={handleClick} >Packages</button>
             </div>
           </li>
         </FeedList>
@@ -41,6 +70,11 @@ const Rightside = (props) => {
           alt=""
         />
       </BannerCard>
+      {
+        toggle ? <Sms showModal={showModal} handleClick={handleClick} /> :
+          <Packages showModal={showModal} handleClick={handleClick} />
+      }
+     
     </Container>
   );
 };

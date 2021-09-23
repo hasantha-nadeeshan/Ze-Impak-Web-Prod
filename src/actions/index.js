@@ -1,6 +1,6 @@
 import { auth, provider, storage } from "../config/Firebase";
 import db from "../config/Firebase";
-import { SET_USER, SUBMIT_USER, USER_DATA, SUBMIT_NUMBER } from './actionType';
+import { SET_USER, SUBMIT_USER, USER_DATA, SUBMIT_NUMBER ,PREFERENCE} from './actionType';
 import axios from 'axios';
 
 export const setUser = (payload) => ({
@@ -48,9 +48,18 @@ export const verification = (payload) => {
     })
 }
 export const number = () => {
+    console.log("adasd")
     return ({
         type: SUBMIT_NUMBER,
         number: true
+    })
+}
+export const smsEnable = (field, value) => {
+    console.log("ses")
+    return ({
+        type: PREFERENCE,
+        field:field,
+        sms: value
     })
 }
 //api request to number verification
@@ -71,6 +80,7 @@ export const postNumber = (code, payload) => {
 }
 
 export function signUpCustom(payloada, email, password) {
+    console.log('payloada')
     return (dispatch) => {
         auth
             .createUserWithEmailAndPassword(email, password)
