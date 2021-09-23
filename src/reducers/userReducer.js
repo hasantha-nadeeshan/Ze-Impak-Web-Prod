@@ -1,6 +1,7 @@
 import {SET_USER} from '../actions/actionType'
 const INITIAL_STATE = {
     user: null,
+
 };
 
 const userReducer = (state = INITIAL_STATE, action) =>{

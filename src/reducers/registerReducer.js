@@ -19,6 +19,7 @@ const registerReducer = (state = INITIAL_STATE, action) =>{
                 verification:action.verification,
             };
         case USER_DATA:
+            console.log("updating..")
             return {
                 ...state,
                 firstName: action.firstName,

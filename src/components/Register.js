@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import  { connect } from "react-redux";
+import { useSelector } from 'react-redux';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
@@ -17,7 +18,7 @@ import Button from '@mui/material/Button';
 import { Redirect } from 'react-router';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'; 
-import { signUpCustom } from "../actions";
+import { signUpCustom, datasave } from "../actions";
 import FormLabel from '@mui/material/FormLabel';
 
 const useStyles = makeStyles({
@@ -69,9 +70,8 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
   
-export const Register = () => {
+ const Register = (props) => {
     const [alignment, setAlignment] = useState('INVESTOR');
-
     const classes = useStyles();
     const [values, setValue] = useState(initialFValues)
     const [val, setVal] = React.useState(new Date('2014-08-18T21:11:54'));
@@ -90,7 +90,7 @@ export const Register = () => {
             ...values,
             [name]: value
         })
-        console.log(values)
+        //console.log(values)
     }
     const handleChange = (event, newAlignment) => {
         setAlignment(newAlignment);
@@ -99,11 +99,11 @@ export const Register = () => {
             userType: newAlignment
         })
     };
-    const submit = () => {
-        
+     const submit = () => {
+        props.datasave(values)
     }
     const createAccount = () => {
-        signUpCustom('ravindu@hi.com',"ravinduhiroshan")
+        props.signUp(values.email,"sfnsjdbji")
     }
     return (
         <div className={classes.boxContainer}>
@@ -152,6 +152,7 @@ export const Register = () => {
                             <TextField
                                 fullWidth
                                 required
+                                placeholder="947723000"
                                 variant='outlined'
                                 label="Mobile"
                                 name="mobile"
@@ -256,3 +257,19 @@ export const Register = () => {
             
     )
 };
+
+
+const mapStateToProps = (state) =>{
+    return {
+        user: state.userState.user,
+    }
+};
+
+
+const mapDispatchToProps = (dispatch) => ({
+    signUp: (email, password) => dispatch(signUpCustom(email, password)),
+    datasave:(payload)=>dispatch(datasave(payload))
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
