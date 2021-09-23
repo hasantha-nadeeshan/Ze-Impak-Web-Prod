@@ -1,8 +1,5 @@
 import { auth, provider, storage } from "../config/Firebase";
 import db from "../config/Firebase";
-import { SET_USER, SUBMIT_USER, USER_DATA } from './actionType';
-import { auth, provider } from "../config/Firebase"
-import db from "../config/Firebase"
 import { SET_USER, SUBMIT_USER, USER_DATA, SUBMIT_NUMBER } from './actionType';
 import axios from 'axios';
 
