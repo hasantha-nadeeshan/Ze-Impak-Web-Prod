@@ -3,7 +3,8 @@ import './App.css';
 import Login from './components/Login';
 import Header from './components/Header';
 import Home from './components/Home';
-import Register  from './components/Register';
+import Register from './components/Register';
+import SigninForm from './components/SigninForm';
 import { useEffect } from 'react';
 import{ getUserAuth } from './actions';
 import { connect } from 'react-redux';
@@ -26,6 +27,9 @@ function App(props) {
           </Route>
           <Route path="/register">
             <Register/>
+          </Route>
+          <Route path="/signin">
+            <SigninForm/>
           </Route>
           
 

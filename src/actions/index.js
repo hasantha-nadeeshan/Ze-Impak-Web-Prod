@@ -1,6 +1,8 @@
 import { auth, provider, storage } from "../config/Firebase";
 import db from "../config/Firebase";
 import { SET_USER, SUBMIT_USER, USER_DATA } from './actionType';
+import { auth, provider } from "../config/Firebase"
+import { SET_USER, SUBMIT_USER, USER_DATA ,SUBMIT_NUMBER} from './actionType';
 import axios from 'axios';
 
 export const setUser = (payload) => ({
@@ -11,15 +13,22 @@ export const setUser = (payload) => ({
 
 //action to send number verification
 export const submitNumber = (payload) => {
-    return ({
-        type: SUBMIT_USER,
-        verification: 'waiting'
-    })
+    console.log('NUMber')
+    const url = 'http://35.200.174.85/number'
+    return (dispatch) => {
+        axios.post(url, {
+            number: payload.mobile
+        }).then((response) => {
+            console.log("response");
+            dispatch(number());
+        })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
 }
 
 export const datasave = (payload) => {
-    console.log("payload")
-    console.log(payload)
     return ({
         type: USER_DATA,
         firstName: payload.firstName,
@@ -34,23 +43,33 @@ export const datasave = (payload) => {
     })
 }
 
-export const verification = () => {
+export const verification = (payload) => {
+    console.log('verification action dispatch')
     return ({
         type: SUBMIT_USER,
-        verification: 'sucess'
+        verification: payload
+    })
+}
+export const number = () => {
+    return ({
+        type: SUBMIT_NUMBER,
+        number: true
     })
 }
 //api request to number verification
-export const postNumber = (payload) => {
+export const postNumber = (code,payload) => {
     console.log('signUpCustom')
     const url = 'http://35.200.174.85/number'
-    axios.post(url, {
-        number: payload
-    }).catch((error) => {
-        console.log(error)
-    })
     return (dispatch) => {
-        dispatch(verification())
+        axios.post(url, {
+            number: code
+        }).then((response) => {
+            console.log(response);
+            dispatch(verification(response.data));
+        })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 }
 
@@ -68,6 +87,19 @@ export function signUpCustom(email, password) {
 
 }
 
+export function signInCustom(email, password) {
+    console.log('signInCustom')
+    return (dispatch) => {
+        auth
+            .signInWithEmailAndPassword(email, password)
+            .then((payload) => {
+                console.log(payload);
+                dispatch(setUser(payload.user));
+            })
+            .catch((error) => alert("Enter correct email and password"));
+    };
+}
+
 ////call api
 
 
@@ -81,13 +113,11 @@ export function signInAPI() {
             })
             .catch((error) => alert(error.message));
     };
-
 }
 
 export function getUserAuth() {
     return (dispatch) => {
         auth.onAuthStateChanged(async (user) => {
-
             if (user) {
                 dispatch(setUser(user));
             }

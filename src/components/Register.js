@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import  { connect } from "react-redux";
+import { connect } from "react-redux";
 import { useSelector } from 'react-redux';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
@@ -17,16 +17,15 @@ import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import { Redirect } from 'react-router';
 import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'; 
-import { signUpCustom, datasave } from "../actions";
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { signUpCustom, datasave, postNumber,submitNumber } from "../actions";
 import FormLabel from '@mui/material/FormLabel';
-
 const useStyles = makeStyles({
     boxContainer: {
         display: 'block',
         marginLeft: 'auto',
         marginRight: 'auto',
-         maxWidth: 600
+        maxWidth: 600
     },
     reg: {
         display: 'block',
@@ -58,9 +57,9 @@ const initialFValues = {
     userType: 'Investor',
     mobile: '',
     email: '',
+    password: '',
     birthday: new Date('2021-01-18T21:11:54'),
     gender: 'male',
-    code:''
 }
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -69,14 +68,12 @@ const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
 }));
-  
- const Register = (props) => {
+
+const Register = (props) => {
     const [alignment, setAlignment] = useState('INVESTOR');
     const classes = useStyles();
     const [values, setValue] = useState(initialFValues)
-    const [val, setVal] = React.useState(new Date('2014-08-18T21:11:54'));
-    const register = useSelector((state) => state.registerState)
-    const user = useSelector((state) => state.userState.user)
+    const [val, setVal] = useState(new Date('2014-08-18T21:11:54'));
     const handleChangeGen = (newVal) => {
         setVal(newVal);
         setValue({
@@ -84,7 +81,7 @@ const Item = styled(Paper)(({ theme }) => ({
             birthday: val
         })
     };
-    const  handleInputChange = e => {
+    const handleInputChange = e => {
         const { name, value } = e.target
         setValue({
             ...values,
@@ -99,32 +96,48 @@ const Item = styled(Paper)(({ theme }) => ({
             userType: newAlignment
         })
     };
-     const submit = () => {
-        props.datasave(values)
+    const submit = () => {
+        let template = true;
+        Object.values(values).forEach((element) => {
+            if (!element) {
+                template = false;
+                console.log(values)
+            }
+        });
+        if (template) {
+            props.submitNumber(values)
+        } else {
+            alert("Fill all fileds");
+        }
+        
     }
-    const createAccount = () => {
-        props.signUp(values.email,"sfnsjdbji")
+    const[code, setCode] = useState('')
+    const verifi = () => {
+        props.postNumber(code,values)
+    }
+    const creatAccount = () => {
+        props.signUp(values.email,values.password)
     }
     return (
         <div className={classes.boxContainer}>
             {
-                user && <Redirect to='/home' />
+                props.user && <Redirect to='/home' />
             }
             <Item>
-            <div className={classes.reg} >
-            <Grid container spacing={3} direction="row" justifyContent="space-between" alignItems="center" >
-                <Grid item xs={3} >
-                <a href="/">
-                    <img src="/images/login-logo.svg" alt="" />
-                </a>
-                </Grid>
-                <Grid item >
-                             Register 
-                </Grid>
-            </Grid>
-            </div>
-            <form action="">                
-                
+                <div className={classes.reg} >
+                    <Grid container spacing={3} direction="row" justifyContent="space-between" alignItems="center" >
+                        <Grid item xs={3} >
+                            <a href="/">
+                                <img src="/images/login-logo.svg" alt="" />
+                            </a>
+                        </Grid>
+                        <Grid item >
+                            Register
+                        </Grid>
+                    </Grid>
+                </div>
+                <form action="">
+
                     <Grid container spacing={3} justifyContent="center" alignItems="center" >
                         <Grid item xs={6} >
                             <TextField
@@ -172,103 +185,125 @@ const Item = styled(Paper)(({ theme }) => ({
                             />
                         </Grid>
                         <Grid item xs={12}>
-                        <ToggleButtonGroup
+                            <TextField
+                                fullWidth
+                                required
+                                variant='outlined'
+                                label="new password"
+                                name="password"
+                                type="password" 
+                                value={values.password}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <ToggleButtonGroup
                                 color="primary"
                                 value={values.userType}
                                 exclusive
                                 onChange={handleChange}
-                                >
+                            >
                                 <ToggleButton value="Investor">Investor</ToggleButton>
                                 <ToggleButton value="Inventor">Inventor</ToggleButton>
-                                </ToggleButtonGroup>
+                            </ToggleButtonGroup>
                         </Grid>
                         <Grid item xs={12}>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <div className={classes.date}>
-                                <DesktopDatePicker
-                                    label="Date desktop"
-                                    inputFormat="MM/dd/yyyy"
-                                    value={values.birthday}
-                                    onChange={handleChangeGen}
-                                    renderInput={(params) => <TextField {...params} fullWidth/>}
+                                <div className={classes.date}>
+                                    <DesktopDatePicker
+                                        label="Date desktop"
+                                        inputFormat="MM/dd/yyyy"
+                                        value={values.birthday}
+                                        onChange={handleChangeGen}
+                                        renderInput={(params) => <TextField {...params} fullWidth />}
                                     />
-                                    </div>
-                                    <div className={classes.date2}>
-                                <MobileDatePicker
-                                    label="Date mobile"
-                                    inputFormat="MM/dd/yyyy"
-                                    value={values.birthday}
-                                    onChange={handleChangeGen}
-                                    renderInput={(params) => <TextField {...params}  fullWidth />}
-                                />
+                                </div>
+                                <div className={classes.date2}>
+                                    <MobileDatePicker
+                                        label="Date mobile"
+                                        inputFormat="MM/dd/yyyy"
+                                        value={values.birthday}
+                                        onChange={handleChangeGen}
+                                        renderInput={(params) => <TextField {...params} fullWidth />}
+                                    />
                                 </div>
                             </LocalizationProvider>
-                            <Grid item xs={12}>
-                                <FormControl component="fieldset">
-                                    <RadioGroup
-                                        row
-                                        aria-label="gender"
-                                        defaultValue={values.gender}
-                                        name="gender"
-                                        onChange={handleInputChange}
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControl component="fieldset">
+                                <RadioGroup
+                                    row
+                                    aria-label="gender"
+                                    defaultValue={values.gender}
+                                    name="gender"
+                                    onChange={handleInputChange}
                                 >
                                     <FormControlLabel value="female" control={<Radio />} label="Female" />
                                     <FormControlLabel value="male" control={<Radio />} label="Male" />
                                     <FormControlLabel value="other" control={<Radio />} label="Other" />
-                            </RadioGroup>
+                                </RadioGroup>
                             </FormControl>
-                            </Grid>
-                            <div style={{ display: 'block' }}>
-                            <Grid item xs={12}>
-                                <Button
-                                    variant="contained"
-                                    onClick={submit}
-                                >Submit</Button>
-                            </Grid>
-                            </div>
                         </Grid>
-                        <div style={{ display: 'block' }}>
-                        <Grid container spacing={3} justifyContent="center" alignItems="center" >
-                        <Grid item xs={12}>
-                        <TextField
-                                fullWidth
-                                required
-                                variant='outlined'
-                                label="CODE"
-                                name="code"
-                                value={values.code}
-                                onChange={handleInputChange}
-                            />
+
+                        {!props.number &&<Grid item xs={12}>
+                            <Button
+                                variant="contained"
+                                onClick={submit}
+                            >Submit</Button>
+                        </Grid>}
                         
-                        </Grid>
-                        <Grid item xs={12}>
-                                <Button
+                        {props.number  &&  <Grid container spacing={3} justifyContent="center" alignItems="center" >
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    variant='outlined'
+                                    label="CODE"
+                                    name="code"
+                                    value={values.code}
+                                    onChange={handleInputChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                            {props.verification &&<Grid item xs={12}>
+                            <Button
+                                variant="contained"
+                                onClick={creatAccount}
+                            >Create Account</Button>
+                                </Grid>}:{
+                                    !props.verification &&
+                                    <Button
                                     variant="contained"
-                                    onClick={createAccount}
+                                    onClick={verifi}
                                 >Verify Mobile Number</Button>
-                        </Grid>
-                        </Grid>
-                        </div>
+                        }
+                                
+                            </Grid>
+                        </Grid>}
+                       
                     </Grid>
-               
-            </form>
+
+                </form>
             </Item>
-            </div>
-            
+        </div>
+
     )
 };
 
 
-const mapStateToProps = (state) =>{
+const mapStateToProps = (state) => {
     return {
         user: state.userState.user,
+        verification: state.registerState.verification,
+        number:state.registerState.number,
     }
 };
 
 
 const mapDispatchToProps = (dispatch) => ({
     signUp: (email, password) => dispatch(signUpCustom(email, password)),
-    datasave:(payload)=>dispatch(datasave(payload))
+    datasave: (payload) => dispatch(datasave(payload)),
+    postNumber: (number) => dispatch(postNumber(number)),
+    submitNumber:(payload) => dispatch(submitNumber(payload))
 });
 
 

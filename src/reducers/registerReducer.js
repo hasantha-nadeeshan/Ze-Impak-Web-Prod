@@ -1,6 +1,7 @@
-import {SUBMIT_USER,USER_DATA} from '../actions/actionType'
+import {SUBMIT_USER,USER_DATA,SUBMIT_NUMBER} from '../actions/actionType'
 const INITIAL_STATE = {
     verification: null,
+    number:false,
     firstName: 'ex:Asanka',
     lastName: 'ex:Kumara',
     userType: 'Investor',
@@ -14,10 +15,17 @@ const INITIAL_STATE = {
 const registerReducer = (state = INITIAL_STATE, action) =>{
     switch (action.type){
         case SUBMIT_USER:
+            console.log(action.verification)
             return{
                 ...state,
                 verification:action.verification,
             };
+            case SUBMIT_NUMBER:
+                console.log(action.number)
+                return{
+                    ...state,
+                    number:action.number,
+                };
         case USER_DATA:
             console.log("updating..")
             return {
