@@ -111,8 +111,6 @@ const SigninForm = (props) => {
 
     )
 };
-
-
 const mapStateToProps = (state) => {
     return {
         user: state.userState.user,

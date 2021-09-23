@@ -116,7 +116,7 @@ const Register = (props) => {
         props.postNumber(code,values)
     }
     const creatAccount = () => {
-        props.signUp(values.email,values.password)
+        props.signUp(values,values.email,values.password)
     }
     return (
         <div className={classes.boxContainer}>

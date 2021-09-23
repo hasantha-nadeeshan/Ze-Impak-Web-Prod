@@ -37,7 +37,6 @@ const registerReducer = (state = INITIAL_STATE, action) =>{
                 email: action.email,
                 birthday: action.birthday,
                 gender: action.gender,
-                code:action.code
             }
         default:
             return state;
