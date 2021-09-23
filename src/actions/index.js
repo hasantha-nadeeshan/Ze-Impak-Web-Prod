@@ -1,5 +1,5 @@
 import { auth, provider } from "../config/Firebase"
-import { SET_USER, SUBMIT_USER, USER_DATA } from './actionType';
+import { SET_USER, SUBMIT_USER, USER_DATA ,SUBMIT_NUMBER} from './actionType';
 import axios from 'axios';
 
 export const setUser = (payload) => ({
@@ -10,15 +10,22 @@ export const setUser = (payload) => ({
 
 //action to send number verification
 export const submitNumber = (payload) => {
-    return ({
-        type: SUBMIT_USER,
-        verification: 'waiting'
-    })
+    console.log('NUMber')
+    const url = 'http://35.200.174.85/number'
+    return (dispatch) => {
+        axios.post(url, {
+            number: payload.mobile
+        }).then((response) => {
+            console.log("response");
+            dispatch(number());
+        })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
 }
 
 export const datasave = (payload) => {
-    console.log("payload")
-    console.log(payload)
     return ({
         type: USER_DATA,
         firstName: payload.firstName,
@@ -33,23 +40,33 @@ export const datasave = (payload) => {
     })
 }
 
-export const verification = () => {
+export const verification = (payload) => {
+    console.log('verification action dispatch')
     return ({
         type: SUBMIT_USER,
-        verification: 'sucess'
+        verification: payload
+    })
+}
+export const number = () => {
+    return ({
+        type: SUBMIT_NUMBER,
+        number: true
     })
 }
 //api request to number verification
-export const postNumber = (payload) => {
+export const postNumber = (code,payload) => {
     console.log('signUpCustom')
     const url = 'http://35.200.174.85/number'
-    axios.post(url, {
-        number: payload
-    }).catch((error) => {
-        console.log(error)
-    })
     return (dispatch) => {
-        dispatch(verification())
+        axios.post(url, {
+            number: code
+        }).then((response) => {
+            console.log(response);
+            dispatch(verification(response.data));
+        })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 }
 
