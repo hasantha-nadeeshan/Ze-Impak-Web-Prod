@@ -57,7 +57,7 @@ const Main = (props) => {
                             <span>Photo</span>
                         </button>
                         <button>
-                            <img src="/images/photo.svg" alt="" />
+                            <img src="/images/video.svg" alt="" />
                             <span>Video</span>
                         </button>
                         <button>
@@ -94,7 +94,12 @@ const Main = (props) => {
                                 </button>
                             </SharedActor>
 
+                            <Title>
+                                {article.title}
+                            </Title>
                             <Description>
+                                
+                                
                                 {article.description}
                             </Description>
                             <SharedImage>
@@ -193,6 +198,7 @@ const ShareBox = styled(CommonCard)`
             padding: 8px 16px  0px 16px;
             img{
                 width: 48px;
+                height: 48px;
                 border-radius:50%;
                 margin-right: 8px;
             }
@@ -298,6 +304,15 @@ const Description = styled.div`
     padding: 0 16px;
     overflow: hidden;
     color: rgba(0,0,0,0.9);
+    font-size: 14px;
+    text-align: left;
+`;
+
+const Title= styled.div`
+    padding: 0 16px;
+    overflow: hidden;
+    margin-bottom: 5px;
+    color: rgba(0,0,0,0.4);
     font-size: 14px;
     text-align: left;
 `;

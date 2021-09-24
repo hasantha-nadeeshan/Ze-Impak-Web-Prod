@@ -11,6 +11,7 @@ const PostModal = (props) => {
     const [shareImage,setShareImage] = useState("");
     const [videoLink,setVideoLink] = useState("");
     const [assetArea,setAssetArea] = useState("");
+    const [title,setTitle] = useState("");
 
     const handleChange =(e) =>{
         const image = e.target.files[0];
@@ -20,7 +21,7 @@ const PostModal = (props) => {
             console.log("awa athukta awulk")
             return;
         }
-        console.log(image,"image");
+        
         setShareImage(image);
 
     }
@@ -42,18 +43,27 @@ const PostModal = (props) => {
             image: shareImage,
             video:videoLink,
             user: props.user,
+            userReg:props.userReg,
             description: editorText,
+            title:title,
             timestamp: firebase.firestore.Timestamp.now(),
         };
 
-        props.postArticale(payload);
-        reset(e);
+        if(title==="" || editorText==""){
+            alert("Please fill all feilds")
+        }
+        else{
+            props.postArticale(payload);
+            reset(e);
+        }
+        
 
     }
 
     const reset=(e)=>{
         setEditorText("");
         setShareImage("");
+        setTitle("");
         setVideoLink("");
         props.handleClick(e);
 
@@ -73,21 +83,28 @@ const PostModal = (props) => {
                             </Header>
                             <SharedContent>
                                 <UserInfo>
-                                    {props.user.photoURL ? 
-                                        (<img src={props.user.photoURL} alt=""/>)
+                                    {props.userReg.sharedImg ? 
+                                        (<img src={props.userReg.sharedImg} alt=""/>)
                                         :
                                         (<img src="/images/user.svg" alt=""/>)
                                     }
                                     
-                                    <span>{props.user.displayName}</span>
+                                    <span>{props.userReg.firstName + " " + props.userReg.lastName}</span>
                                 </UserInfo>
                                 <Editor>
+                                    <textarea 
+                                        value={title} 
+                                        onChange={(e)=>setTitle(e.target.value)}
+                                        placeholder="Title"
+                                        autoFocus={true}
+                                    />
                                     <textarea 
                                         value={editorText} 
                                         onChange={(e)=>setEditorText(e.target.value)}
                                         placeholder="What do you want to talk about"
                                         autoFocus={true}
                                     />
+                                    
                                     {
                                         assetArea==="image"  ? (
 
@@ -140,17 +157,17 @@ const PostModal = (props) => {
                             <ShareCreation>
                                 <AttachAssets>
                                     <AssetButton onClick={()=> switchAssetArea("image")}>
-                                        <img src="/images/share-icon.svg" alt=""/>
+                                        <img src="/images/photo.svg" alt=""/>
                                     </AssetButton>
                                     <AssetButton onClick={()=> switchAssetArea("media")}>
-                                        <img src="/images/photo.svg" alt=""/>
+                                        <img src="/images/video.svg" alt=""/>
                                     </AssetButton>
                                 </AttachAssets>
                                     <ShareComment>
-                                        <AssetButton>
+                                        {/* <AssetButton>
                                             <img src="/images/share-icon.svg" alt=""/>
                                             Anyone
-                                        </AssetButton>
+                                        </AssetButton> */}
                                     </ShareComment>
                                     <PostButton disabled={!editorText ? true : false} onClick={(event)=> postArticale(event)}>
                                         Post
@@ -317,7 +334,12 @@ const Editor = styled.div`
         width: 100%;
         min-height: 100px;
         resize: none;
+
+        &:first-child{
+            min-height:40px;
+        }
     }
+
 
     input{
         width:100%;
@@ -340,6 +362,7 @@ const mapStateToProps = (state) =>{
 
     return {
         user:state.userState.user,
+        userReg:state.registerState,
     }
 };
 

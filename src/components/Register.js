@@ -60,6 +60,7 @@ const initialFValues = {
     password: '',
     birthday: new Date('2021-01-18T21:11:54'),
     gender: 'male',
+    sharedImg:""
 }
 
 const Item = styled(Paper)(({ theme }) => ({

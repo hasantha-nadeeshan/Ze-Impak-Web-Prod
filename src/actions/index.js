@@ -137,7 +137,7 @@ export function userSaveAPI(payload,uid) {
                 birthday: payload.birthday,
                 gender: payload.gender,
                 uid:uid,
-                sharedImg:payload.sharedImg,
+                sharedImg:"",
         }).then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
         })
@@ -197,6 +197,7 @@ export function signOutAPI() {
 
 export function postArticleAPI(payload) {
     return (dispatch) => {
+        dispatch(setLoading(true));
         if(payload.image != ""){
             const upload = storage
                 .ref(`images/${payload.image.name}`)
@@ -213,34 +214,38 @@ export function postArticleAPI(payload) {
             const downloadURL = await upload.snapshot.ref.getDownloadURL();
             db.collection("articles").add({
                 actor : {
-                    description :payload.user.email,
-                    title : payload.user.displayName,
+                    description :payload.userReg.firstName + " " +payload.userReg.lastName,
+                    title : payload.userReg.email,
                     date: payload.timestamp,
-                    image: payload.user.photoURL
+                    image: payload.userReg.sharedImg,
                 },
                 video: payload.video,
                 sharedImg : downloadURL,
                 comments:0,
                 description: payload.description,
+                title: payload.title,
                 
 
             });
+            dispatch(setLoading(false));
 
         }
         );
     } else if (payload.video){
         db.collection('articles').add({
             actor:{
-                description :payload.user.email,
-                title : payload.user.displayName,
+                description :payload.userReg.firstName + " " +payload.userReg.lastName,
+                title : payload.userReg.email,
                 date: payload.timestamp,
                 image: payload.user.photoURL,
             },
             video: payload.video,
-                sharedImg :"",
-                comments:0,
-                description: payload.description,
-        })
+            sharedImg :"",
+            comments:0,
+            description: payload.description,
+            title: payload.title,
+        });
+        dispatch(setLoading(false));
     }
 };
 
