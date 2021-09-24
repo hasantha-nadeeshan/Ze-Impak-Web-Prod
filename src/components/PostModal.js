@@ -4,6 +4,8 @@ import ReactPlayer from 'react-player';
 import {connect} from 'react-redux';
 import firebase from 'firebase';
 import  { postArticleAPI } from '../actions';
+import Select from 'react-select';
+
 
 const PostModal = (props) => {
 
@@ -12,6 +14,13 @@ const PostModal = (props) => {
     const [videoLink,setVideoLink] = useState("");
     const [assetArea,setAssetArea] = useState("");
     const [title,setTitle] = useState("");
+    const [field,setField] = useState({});
+    
+    const Countries = [
+        { label: "AGRICULTURE"},
+        { label: "ICT" },
+        { label: "ELECTRONICS" },
+      ];
 
     const handleChange =(e) =>{
         const image = e.target.files[0];
@@ -46,6 +55,7 @@ const PostModal = (props) => {
             userReg:props.userReg,
             description: editorText,
             title:title,
+            field:field.label,
             timestamp: firebase.firestore.Timestamp.now(),
         };
 
@@ -54,6 +64,7 @@ const PostModal = (props) => {
         }
         else{
             props.postArticale(payload);
+            console.log(payload)
             reset(e);
         }
         
@@ -64,6 +75,7 @@ const PostModal = (props) => {
         setEditorText("");
         setShareImage("");
         setTitle("");
+        setField({});
         setVideoLink("");
         props.handleClick(e);
 
@@ -92,6 +104,14 @@ const PostModal = (props) => {
                                     <span>{props.userReg.firstName + " " + props.userReg.lastName}</span>
                                 </UserInfo>
                                 <Editor>
+                                    <Select 
+                                        value = {field}
+                                        options={Countries}
+                                        onChange = {(e)=> setField(e)}
+
+
+                                    
+                                    />
                                     <textarea 
                                         value={title} 
                                         onChange={(e)=>setTitle(e.target.value)}

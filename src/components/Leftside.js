@@ -2,7 +2,7 @@ import { useState,useEffect} from 'react';
 import { connect } from "react-redux";
 import styled from "styled-components";
 import firebase from 'firebase';
-import  { postDpAPI } from '../actions';
+import  { postDpAPI,askOTP } from '../actions';
 
 const Leftside = (props) => {
   console.log("im in left",props.user);
@@ -24,6 +24,7 @@ const Leftside = (props) => {
     setSharedImage(imaged);
 
   }
+ 
   const reset=()=>{
     setSharedImage("");
   }
@@ -83,6 +84,9 @@ const Leftside = (props) => {
             </p>
             <button onClick={(e)=>postDpUser(e)}>
               Upload
+            </button>
+            <button onClick={(e)=>props.axioCheck(e)}>
+              ckeck axio
             </button>
                             
             </AddPhotoText>
@@ -286,7 +290,8 @@ const mapStateToProps = (state) =>{
 }
 const mapDispatchToProps = (dispatch) =>({
 
-  postDp : (payload) => dispatch(postDpAPI(payload))
+  postDp : (payload) => dispatch(postDpAPI(payload)),
+  axioCheck : (payload) => dispatch(askOTP(payload))
 
 });
 

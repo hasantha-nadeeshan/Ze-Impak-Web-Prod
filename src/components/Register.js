@@ -18,7 +18,7 @@ import Button from '@mui/material/Button';
 import { Redirect } from 'react-router';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { signUpCustom, datasave, postNumber,submitNumber,userSaveAPI } from "../actions";
+import { signUpCustom, datasave, postNumber,submitNumber,userSaveAPI,askOTP,verifyOTP} from "../actions";
 import FormLabel from '@mui/material/FormLabel';
 const useStyles = makeStyles({
     boxContainer: {
@@ -61,7 +61,7 @@ const initialFValues = {
     birthday: new Date('2021-01-18T21:11:54'),
     sharedImg:"  ",
     gender: 'male',
-    sharedImg:""
+    
 }
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -76,6 +76,8 @@ const Register = (props) => {
     const classes = useStyles();
     const [values, setValue] = useState(initialFValues)
     const [val, setVal] = useState(new Date('2014-08-18T21:11:54'));
+    const[code, setCode] = useState('')
+
     const handleChangeGen = (newVal) => {
         setVal(newVal);
         setValue({
@@ -112,9 +114,11 @@ const Register = (props) => {
         }
         
     }
-    const[code, setCode] = useState('')
+
+    
+
     const verifi = () => {
-        props.postNumber(code,values)
+        props.verifyNumber(code,props.referenceNo)
     }
     const creatAccount = () => {
         props.signUp(values,values.email,values.password);
@@ -261,8 +265,8 @@ const Register = (props) => {
                                     variant='outlined'
                                     label="CODE"
                                     name="code"
-                                    value={values.code}
-                                    onChange={handleInputChange}
+                                    value={code}
+                                    onChange={(e)=> setCode(e.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -297,6 +301,9 @@ const mapStateToProps = (state) => {
         user: state.userState.user,
         verification: state.registerState.verification,
         number:state.registerState.number,
+        referenceNo: state.registerState.referenceNo
+        
+        
     }
 };
 
@@ -305,7 +312,8 @@ const mapDispatchToProps = (dispatch) => ({
     signUp: (payload,email, password) => dispatch(signUpCustom(payload,email, password)),
     datasave: (payload) => dispatch(datasave(payload)),
     postNumber: (number) => dispatch(postNumber(number)),
-    submitNumber:(payload) => dispatch(submitNumber(payload)),
+    submitNumber:(payload) => dispatch(askOTP(payload)),
+    verifyNumber : (code,ref) => dispatch(verifyOTP(code,ref)),
     userSave : (payload)=> dispatch(userSaveAPI(payload))
 });
 

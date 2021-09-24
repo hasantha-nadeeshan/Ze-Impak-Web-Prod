@@ -32,6 +32,8 @@ const Main = (props) => {
         }
     }
     return( 
+
+        
         <>
         { props.articles.length === 0 ? 
             (<p>There are no articles</p>)
@@ -97,11 +99,7 @@ const Main = (props) => {
                             <Title>
                                 {article.title}
                             </Title>
-                            <Description>
-                                
-                                
-                                {article.description}
-                            </Description>
+                            
                             <SharedImage>
                                 <a>
                                     { !article.SharedImg && article.video ? 
@@ -113,7 +111,7 @@ const Main = (props) => {
                                     }
                                 </a>
                             </SharedImage>
-                            <SocialCounts>
+                            {/* <SocialCounts>
                                 <li>
                                     <button>
                                         <img src="http://static-exp1.licdn.com/sc/h/d310t2g24pvdy4pt1jkedo4yb" alt="" />
@@ -122,8 +120,8 @@ const Main = (props) => {
                                     </button>
                                 </li>
                                
-                            </SocialCounts>
-                            <SocialActions>
+                            </SocialCounts> */}
+                            {/* <SocialActions>
                                 <button>
                                     <img src="http://static-exp1.licdn.com/sc/h/d310t2g24pvdy4pt1jkedo4yb" alt="" />
                                     <span>Like</span>
@@ -140,8 +138,12 @@ const Main = (props) => {
                                     <img src="http://static-exp1.licdn.com/sc/h/d310t2g24pvdy4pt1jkedo4yb" alt="" />
                                     <span>Send</span>
                                 </button>
-                            </SocialActions>
-
+                            </SocialActions> */}
+                            <Description>
+                                
+                                
+                                {article.description}
+                            </Description>
                         </Article>
                     ))}
                 </Content>

@@ -2,7 +2,10 @@ import styled from "styled-components";
 import Sms from './Sms';
 import Packages from './Packages';
 import { useState } from 'react';
-const sms = "SMS SERVICE"
+import { connect } from "react-redux";
+
+const sms = "SMS SERVICE";
+
 const Rightside = (props) => {
   const [showModal, setShowModal] = useState("close");
   const [toggle,setToggle] = useState(true);
@@ -32,7 +35,9 @@ const Rightside = (props) => {
 }
   return (
     <Container>
-      <FollowCard>
+      { props.user.userType === "Investor"  && 
+        
+        <FollowCard>
         <Title>
           <h2>Investor's choice</h2>
           <img src="/images/feed-icon.svg" alt="" />
@@ -64,6 +69,7 @@ const Rightside = (props) => {
           <img src="/images/right-icon.svg" alt="" />
         </Recommendation>
       </FollowCard>
+      }
       <BannerCard>
         <img
           src="https://static-exp1.licdn.com/scds/common/u/images/promo/ads/li_evergreen_jobs_ad_300x250_v1.jpg"
@@ -158,5 +164,12 @@ const BannerCard = styled(FollowCard)`
     height: 100%;
   }
 `;
+const mapStateToProps = (state) =>{
+  return{
+    //user: state.userState.user,
+    user: state.registerState,
 
-export default Rightside;
+  }
+}
+
+export default connect(mapStateToProps)(Rightside);

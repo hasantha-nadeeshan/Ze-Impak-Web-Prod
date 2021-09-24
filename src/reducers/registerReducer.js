@@ -11,11 +11,13 @@ const INITIAL_STATE = {
     gender: 'male',
     code:null,
     uid:null,
-    sharedImg:"",
+    sharedImg:" ",
     code: '',
+    referenceNo:'',
+    subscriberId:"",
     preference: {ICT:{
         field: "ICT",
-        sms:true
+        sms:false
     }},
    
 };

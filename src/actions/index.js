@@ -20,21 +20,69 @@ export const getArticles = (payload)=>({
 })
 
 //action to send number verification
-export const submitNumber = (payload) => {
-    console.log('NUMber')
-    const url = 'http://35.200.174.85/number'
-    return (dispatch) => {
-        axios.post(url, {
-            number: payload.mobile
-        }).then((response) => {
-            console.log("response");
-            dispatch(number());
-        })
-            .catch((error) => {
-                console.log(error)
-            })
+// export  const submitNumber =  (payload) => {
+//     console.log('axio call')
+//     const url = 'https://hazi99.free.beeceptor.com/my/api/path'
+//      return (dispatch) =>  {
+//          axios.post(url, {
+//             number: "1234"
+//         }).then((response) => {
+//             console.log("response",response);
+//            // dispatch(number());
+//         })
+//             .catch((error) => {
+//                 console.log("axiioerror",error)
+//             })
+//     }
+// }
+export const askOTP = (payload)=> {
+    return async dispatch => {
+        try{
+            const resp = await axios.post('http://35.200.174.85/number', {
+                number:payload.mobile
+            });
+            console.log("response from api",resp);
+            if(resp.data.statusDetail === "user already registered"){
+                alert("Alredy Registered")
+            }
+            else{
+                dispatch(number(resp.data));
+            }
+           
+        }
+        catch (error){
+            console.log(error);
+            alert("System error with ")
+        }
     }
+    
 }
+export const verifyOTP = (code,ref)=> {
+    return async dispatch => {
+        try{
+            const resp = await axios.post('http://35.200.174.85/verify', {
+                referenceNo:ref,
+                otp:code
+            });
+            console.log("response from api for verify",resp);
+            if(resp.data.statusDetail === "Success"){ 
+                dispatch(verification(resp.data));      //should be chaged according to resp from BE for verify
+                
+                
+            }
+            else{
+                alert("Your code is wrong");
+            }
+           
+        }
+        catch (error){
+            console.log(error);
+            alert("System error with ")
+        }
+    }
+    
+}
+
 export const datasave = (payload,uid) => {
     console.log(payload,"datasave");
     return ({
@@ -57,14 +105,18 @@ export const verification = (payload) => {
     console.log('verification action dispatch')
     return ({
         type: SUBMIT_USER,
-        verification: payload
+        verification: true,
+        subscriberId:payload.subscriberId
     })
 }
-export const number = () => {
+export const number = (payload) => {
     console.log("adasd")
     return ({
         type: SUBMIT_NUMBER,
-        number: true
+        number: true,
+        referenceNo:payload.referenceNo
+
+
     })
 }
 export const smsEnable = (field, value, user ) => {
@@ -90,7 +142,7 @@ export const smsEnable = (field, value, user ) => {
 //api request to number verification
 export const postNumber = (code, payload) => {
     console.log('signUpCustom')
-    const url = 'http://35.200.174.85/number'
+    const url = 'https://hazi99.free.beeceptor.com/my/api/path';
     return (dispatch) => {
         axios.post(url, {
             number: code
@@ -150,6 +202,7 @@ export function userSaveAPI(payload,uid) {
                 gender: payload.gender,
                 uid:uid,
                 sharedImg:"",
+                subscriberId:payload.subscriberId
         }).then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
         })
@@ -236,7 +289,7 @@ export function postArticleAPI(payload) {
                 comments:0,
                 description: payload.description,
                 title: payload.title,
-                
+                field:payload.field
 
             });
             dispatch(setLoading(false));
@@ -256,6 +309,7 @@ export function postArticleAPI(payload) {
             comments:0,
             description: payload.description,
             title: payload.title,
+            field:payload.field
         });
         dispatch(setLoading(false));
     }
