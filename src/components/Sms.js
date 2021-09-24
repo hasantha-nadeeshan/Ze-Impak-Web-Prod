@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import  {useEffect } from 'react';
-import {connect} from 'react-redux';
+import { useEffect } from 'react';
+import { connect } from 'react-redux';
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import { makeStyles } from '@mui/styles';
@@ -21,61 +21,58 @@ const useStyles = makeStyles({
 })
 const Sms = (props) => {
     const classes = useStyles();
-    const reset=(e)=>{
+    const reset = (e) => {
         props.handleClick(e);
 
     }
     const btn = (e) => {
         const fl = e.target.outerText
         if (props.preference[fl] !== undefined && props.preference[fl].sms) {
-            //false
-            props.smsEnable(fl, false);
-            
+            props.smsEnable(fl, false,props.user);
             console.log(e.target.outerText);
         } else if (props.preference[fl] !== undefined) {
-            //true
-            props.smsEnable(fl, true);
+            props.smsEnable(fl, true,props.user);
             console.log(e.target.outerText);
         } else {
-            //true
-            props.smsEnable(fl, true);
+            props.smsEnable(fl, true,props.user);
             console.log(e.target.outerText);
 
         }
-       
     }
+
+
     console.log(props.preference)
     return (
         <>
-            {   props.showModal === "open" &&
-        
+            {props.showModal === "open" &&
+
                 <Container>
-                <Content>
-                <Header>
-                                <h2>Set SMS alert to</h2>
-                        <button onClick={(event) => reset(event)}>
-                            Done
-                         </button>
-                            </Header>
-                    <div className={classes.reg} >
-                        <div >
-                        <Typography caption >Filed of preference</Typography> 
-                        </div>
-                    <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="center" >
-                            {props.fields && props.fields.map((filed) => (
-                                <Grid item xs={12}  justifyContent="center"  key={filed}>
-                                    <Button
-                                        onClick={(event) => btn(event)}
-                                    fullWidth
-                                    variant="contained"
-                                >{props.preference[filed] !== undefined&&props.preference[filed].sms  && <DoneIcon />}{filed}</Button>
+                    <Content>
+                        <Header>
+                            <h2>Set SMS alert to</h2>
+                            <button onClick={(event) => reset(event)}>
+                                Done
+                            </button>
+                        </Header>
+                        <div className={classes.reg} >
+                            <div >
+                                <Typography caption >Filed of preference</Typography>
+                            </div>
+                            <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="center" >
+                                {props.fields && props.fields.map((filed) => (
+                                    <Grid item xs={12} justifyContent="center" key={filed}>
+                                        <Button
+                                            onClick={(event) => btn(event)}
+                                            fullWidth
+                                            variant="contained"
+                                        >{props.preference[filed] !== undefined && props.preference[filed].sms && <DoneIcon />}{filed}</Button>
+                                    </Grid>
+                                ))
+                                }
                             </Grid>
-                            ))
-                            }
-                        </Grid>
-                    </div>
-                </Content>
-            </Container>
+                        </div>
+                    </Content>
+                </Container>
             }
         </>
     );
@@ -130,25 +127,25 @@ const Header = styled.div`
         color: red;
         outline: none;
         border: none;
-        
 
     }
 
 `;
 
 
-const mapStateToProps = (state) =>{
+const mapStateToProps = (state) => {
 
     return {
         fields: state.fieldState.fields,
-        preference: state.registerState.preference
+        preference: state.registerState.preference,
+        user: state.registerState        
 
     }
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    smsEnable: (field,value) => dispatch(smsEnable(field,value)),
+    smsEnable: (field, value,user) => dispatch(smsEnable(field, value,user)),
 
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(Sms);
+export default connect(mapStateToProps, mapDispatchToProps)(Sms);

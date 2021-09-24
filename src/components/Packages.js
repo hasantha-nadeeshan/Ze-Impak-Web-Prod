@@ -19,6 +19,7 @@ const useStyles = makeStyles({
         fontSize: 50
     }
 })
+const Pack = ["Basic","Standard","Premiunm"]
 const Packages = (props) => {
     const classes = useStyles();
     const reset=(e)=>{
@@ -29,7 +30,7 @@ const Packages = (props) => {
         const fl = e.target.outerText
        
     }
-    console.log(props.preference)
+
     return (
         <>
             {   props.showModal === "open" &&
@@ -44,16 +45,16 @@ const Packages = (props) => {
                             </Header>
                     <div className={classes.reg} >
                         <div >
-                        <Typography caption >Filed of preference</Typography> 
+                        <Typography caption >Select</Typography> 
                         </div>
                     <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="center" >
-                            {props.fields && props.fields.map((filed) => (
+                            {Pack && Pack.map((filed) => (
                                 <Grid item xs={12}  justifyContent="center"  key={filed}>
                                     <Button
                                         onClick={(event) => btn(event)}
                                     fullWidth
                                     variant="contained"
-                                >{props.preference[filed] !== undefined&&props.preference[filed].sms  && <DoneIcon />}{filed}</Button>
+                                >{filed}</Button>
                             </Grid>
                             ))
                             }
@@ -127,8 +128,6 @@ const Header = styled.div`
 const mapStateToProps = (state) =>{
 
     return {
-        fields: state.fieldState.fields,
-        preference: state.registerState.preference
 
     }
 };

@@ -59,6 +59,7 @@ const initialFValues = {
     email: '',
     password: '',
     birthday: new Date('2021-01-18T21:11:54'),
+    sharedImg:"  ",
     gender: 'male',
     sharedImg:""
 }

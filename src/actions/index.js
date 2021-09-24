@@ -67,8 +67,20 @@ export const number = () => {
         number: true
     })
 }
-export const smsEnable = (field, value) => {
-    console.log("ses")
+export const smsEnable = (field, value, user ) => {
+    db.collection('users').doc(user.uid).update({
+        preference: {
+            ... user.preference,
+            [field]: {
+            field:field,
+            sms: value
+        }}
+}).then((docRef) => {
+    console.log("Document written with ID: ", docRef.id);
+})
+    .catch((error) => {
+        console.error("Error adding document: ", error);
+    });
     return ({
         type: PREFERENCE,
         field:field,
