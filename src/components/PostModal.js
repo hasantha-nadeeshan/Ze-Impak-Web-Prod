@@ -14,12 +14,13 @@ const PostModal = (props) => {
 
     const handleChange =(e) =>{
         const image = e.target.files[0];
-        
+        console.log("awa athukta")
         if (image === '' || image === undefined ){
             alert("not an image, the file is a ${typeof image} ");
+            console.log("awa athukta awulk")
             return;
         }
-
+        console.log(image,"image");
         setShareImage(image);
 
     }

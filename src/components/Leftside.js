@@ -6,28 +6,28 @@ import  { postDpAPI } from '../actions';
 
 const Leftside = (props) => {
   console.log("im in left",props.user);
-  const [shareImage,setShareImage] = useState("");
+  const [sharedImage,setSharedImage] = useState("");
   const [imageLink,setImageLink] = useState(props.user.sharedImg);
 
   useEffect(() =>{
     setImageLink(props.user.sharedImg);
   },[])
 
-  const handleChange =(e) =>{
-    const image = e.target.files[0];
+  const handleChanged =(e) =>{
+    const imaged = e.target.files[0];
     
-    if (image === '' || image === undefined ){
+    if (imaged === '' || imaged === undefined ){
         alert("not an image, the file is a ${typeof image} ");
         return;
     }
 
-    setShareImage(image);
+    setSharedImage(imaged);
 
   }
   const reset=()=>{
-    setShareImage("");
+    setSharedImage("");
   }
-  const postArticale = (e) =>{
+  const postDpUser = (e) =>{
     e.preventDefault();
     if (e.target !== e.currentTarget){
         return;
@@ -35,13 +35,13 @@ const Leftside = (props) => {
     }
 
     const payload = {
-        image: shareImage,
+        image: sharedImage,
         timestamp: firebase.firestore.Timestamp.now(),
         uid:props.user.uid,
     };
 
     props.postDp(payload);
-    reset(e);
+    reset();
 
   }
 
@@ -72,16 +72,16 @@ const Leftside = (props) => {
               type="file"  
               accept ="image/gif, image/jpeg, image/png, image/jpg"
               name = "image" 
-              id="file"
+              id="file1"
               style = {{ display: "none" }}
-              onChange={handleChange}
+              onChange={handleChanged}
             />
             <p>
-              <label htmlFor="file">
+              <label htmlFor="file1">
                 Select an image to share
               </label>
             </p>
-            <button onClick={(event)=>postArticale(event)}>
+            <button onClick={(e)=>postDpUser(e)}>
               Upload
             </button>
                             
