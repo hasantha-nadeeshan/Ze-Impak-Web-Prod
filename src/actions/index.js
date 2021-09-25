@@ -1,6 +1,6 @@
 import { auth, provider, storage } from "../config/Firebase";
 import db from "../config/Firebase";
-import { SET_USER, SUBMIT_USER, USER_DATA, SUBMIT_NUMBER, SET_LOADING_STATUS, GET_ARTICLES,PREFERENCE } from './actionType';
+import { SET_USER, SUBMIT_USER, USER_DATA, SUBMIT_NUMBER, SET_LOADING_STATUS, GET_ARTICLES,PREFERENCE,SET_RISK,RESET_RISK } from './actionType';
 import axios from 'axios';
 
 export const setUser = (payload) => ({
@@ -17,6 +17,16 @@ export const setLoading = (status)=>({
 export const getArticles = (payload)=>({
     type: GET_ARTICLES,
     payload: payload,
+})
+
+export const setRisk = (payload) =>({
+    type:SET_RISK,
+    payload:payload
+})
+
+export const resetRisk = ()=>({
+    type:RESET_RISK,
+    
 })
 
 //action to send number verification
@@ -312,6 +322,7 @@ export function postArticleAPI(payload) {
 
             });
             dispatch(setLoading(false));
+            dispatch(resetRisk());
 
         }
         );
@@ -331,6 +342,8 @@ export function postArticleAPI(payload) {
             field:payload.field
         });
         dispatch(setLoading(false));
+        dispatch(resetRisk());
+
     }
 };
 
@@ -380,26 +393,17 @@ export function getArticlesAPI(){
     };
 }
 
-export const testAxio = ()=> {
+export const riskCalculate = (des)=> {
     return async dispatch => {
         try{
             const resp = await axios.post('http://35.200.174.85/ml', {
-                // headers:{
-                //     'Access-Control-Allow-Origin':'*',
-                // },
+              
                
 
-                description:"hello yomali + hiroshan"
+                description:des
             });
             console.log("response from api for verify",resp);
-            if(resp.data.statusDetail === "Success"){ 
-                dispatch(verification(resp.data));      //should be chaged according to resp from BE for verify
-                
-                
-            }
-            else{
-                alert("Your code is wrong");
-            }
+            dispatch(setRisk(resp.data));
            
         }
         catch (error){

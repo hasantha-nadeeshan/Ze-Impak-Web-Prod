@@ -85,9 +85,7 @@ const Leftside = (props) => {
             <button onClick={(e)=>postDpUser(e)}>
               Upload
             </button>
-            <button onClick={(e)=>props.axioCheck(e)}>
-              ckeck axio
-            </button>
+           
                             
             </AddPhotoText>
           </a>
@@ -294,7 +292,7 @@ const mapStateToProps = (state) =>{
 const mapDispatchToProps = (dispatch) =>({
 
   postDp : (payload) => dispatch(postDpAPI(payload)),
-  axioCheck : (payload) => dispatch(testAxio(payload))
+ 
 
 });
 

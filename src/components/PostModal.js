@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ReactPlayer from 'react-player';
 import {connect} from 'react-redux';
 import firebase from 'firebase';
-import  { postArticleAPI,notifyInvestor } from '../actions';
+import  { postArticleAPI,notifyInvestor,riskCalculate,resetRisk } from '../actions';
 import Select from 'react-select';
 
 
@@ -74,6 +74,34 @@ const PostModal = (props) => {
         
 
     }
+    const calRisk = (e) =>{
+        e.preventDefault();
+        if (e.target !== e.currentTarget){
+            return;
+
+        }
+
+        const payload = {
+          
+            description: editorText,
+           
+        };
+
+        
+        if(editorText===""){
+            alert("Please fill description field")
+        }
+        else{
+            props.calculateRisk(payload.description);
+            
+            console.log(payload);
+          
+          
+        }
+        
+
+    }
+
 
     const reset=(e)=>{
         setEditorText("");
@@ -81,6 +109,7 @@ const PostModal = (props) => {
         setTitle("");
         setField({});
         setVideoLink("");
+        props.resetRisk();
         props.handleClick(e);
 
     }
@@ -188,14 +217,31 @@ const PostModal = (props) => {
                                     </AssetButton>
                                 </AttachAssets>
                                     <ShareComment>
-                                        {/* <AssetButton>
-                                            <img src="/images/share-icon.svg" alt=""/>
-                                            Anyone
-                                        </AssetButton> */}
+                                        { props.risk.value === "" ? (
+                                            <AssetButton>
+                                            
+                                            Press Verify Risk
+                                            </AssetButton>
+                                        ):
+
+
+
+                                            (<AssetButton>              
+                                                                                        
+                                            Calculated Risk: {props.risk.value}
+                                            </AssetButton>)
+
+                                    
+                                        }
+                                        
                                     </ShareComment>
+                                    <PostButton disabled={!editorText ? true : false} onClick={(event)=> calRisk(event)}>
+                                        Verify Risk
+                                    </PostButton>
                                     <PostButton disabled={!editorText ? true : false} onClick={(event)=> postArticale(event)}>
                                         Post
                                     </PostButton>
+                                    
                             </ShareCreation>
                         </Content>
                 </Container>
@@ -314,6 +360,8 @@ const AssetButton = styled.button`
     min-width:auto;
     color: rgba(0,0,0,0.5);
 
+
+
 `;
 
 const AttachAssets = styled.div`
@@ -387,13 +435,16 @@ const mapStateToProps = (state) =>{
     return {
         user:state.userState.user,
         userReg:state.registerState,
+        risk: state.riskState,
     }
 };
 
 const mapDispatchToProps = (dispatch) =>({
 
     postArticale : (payload) => dispatch(postArticleAPI(payload)),
-    notifyInvestor: (msg) => dispatch(notifyInvestor(msg))
+    notifyInvestor: (msg) => dispatch(notifyInvestor(msg)),
+    calculateRisk: (des) => dispatch(riskCalculate(des)),
+    resetRisk: ()=> dispatch(resetRisk())
 
 });
 
