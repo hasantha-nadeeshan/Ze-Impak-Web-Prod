@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ReactPlayer from 'react-player';
 import {connect} from 'react-redux';
 import firebase from 'firebase';
-import  { postArticleAPI } from '../actions';
+import  { postArticleAPI,notifyInvestor } from '../actions';
 import Select from 'react-select';
 
 
@@ -59,12 +59,16 @@ const PostModal = (props) => {
             timestamp: firebase.firestore.Timestamp.now(),
         };
 
+        const sendMsg = props.userReg.firstName + " " + props.userReg.lastName + " has just published a post relavant to " + payload.field + " field. Contact him/her via " + props.user.email + " . Thank You!";
+
         if(title==="" || editorText==""){
             alert("Please fill all feilds")
         }
         else{
             props.postArticale(payload);
-            console.log(payload)
+            
+            console.log(payload);
+            props.notifyInvestor(sendMsg);
             reset(e);
         }
         
@@ -388,7 +392,8 @@ const mapStateToProps = (state) =>{
 
 const mapDispatchToProps = (dispatch) =>({
 
-    postArticale : (payload) => dispatch(postArticleAPI(payload))
+    postArticale : (payload) => dispatch(postArticleAPI(payload)),
+    notifyInvestor: (msg) => dispatch(notifyInvestor(msg))
 
 });
 

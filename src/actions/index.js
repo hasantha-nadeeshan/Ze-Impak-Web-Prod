@@ -84,6 +84,24 @@ export const verifyOTP = (code,ref)=> {
     
 }
 
+export const notifyInvestor = (msg)=> {
+    return  dispatch => {
+        try{
+            const resp =  axios.post('http://35.200.174.85/sms', {
+                sms:msg
+            });
+            console.log("response from api for verify",resp);
+   
+           
+        }
+        catch (error){
+            console.log(error);
+            
+        }
+    }
+    
+}
+
 export const datasave = (payload,uid) => {
     console.log(payload,"datasave");
     return ({
