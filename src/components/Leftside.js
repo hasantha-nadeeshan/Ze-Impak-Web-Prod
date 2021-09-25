@@ -2,7 +2,7 @@ import { useState,useEffect} from 'react';
 import { connect } from "react-redux";
 import styled from "styled-components";
 import firebase from 'firebase';
-import  { postDpAPI,askOTP } from '../actions';
+import  { postDpAPI,testAxio } from '../actions';
 
 const Leftside = (props) => {
   console.log("im in left",props.user);
@@ -109,11 +109,11 @@ const Leftside = (props) => {
         </Item> */}
       </ArtCard>
 
-      {/* <CommunityCard>
-        <a>
-          <span>Groups</span>
+      <CommunityCard>
+         <a>
+          <span>Advertisement Area</span>
         </a>
-        <a>
+        {/*<a>
           <span>
             Events
             <img src="/images/plus-icon.svg" alt="" />
@@ -124,8 +124,8 @@ const Leftside = (props) => {
         </a>
         <a>
           <span>Discover more</span>
-        </a>
-      </CommunityCard> */}
+        </a> */}
+      </CommunityCard>
     </Container>
   );
 };
@@ -257,10 +257,13 @@ const CommunityCard = styled(ArtCard)`
   text-align: left;
   display: flex;
   flex-direction: column;
+  height:100%;
+  align-items: center;
   a {
     color: black;
     padding: 4px 12px 4px 12px;
     font-size: 12px;
+    text-align: center;
     &:hover {
       color: #0a66c2;
     }
@@ -291,7 +294,7 @@ const mapStateToProps = (state) =>{
 const mapDispatchToProps = (dispatch) =>({
 
   postDp : (payload) => dispatch(postDpAPI(payload)),
-  axioCheck : (payload) => dispatch(askOTP(payload))
+  axioCheck : (payload) => dispatch(testAxio(payload))
 
 });
 

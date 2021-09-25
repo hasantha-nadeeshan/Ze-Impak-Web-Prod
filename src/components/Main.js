@@ -63,12 +63,12 @@ const Main = (props) => {
                             <span>Video</span>
                         </button>
                         <button>
-                            <img src="/images/photo.svg" alt="" />
-                            <span>Event</span>
+                            <img src="/images/idea.png" alt="" />
+                            <span>Idea</span>
                         </button>
                         <button>
-                            <img src="/images/photo.svg" alt="" />
-                            <span>Article</span>
+                            <img src="/images/info.svg" alt="" />
+                            <span>Info</span>
                         </button>
 
                     </div>

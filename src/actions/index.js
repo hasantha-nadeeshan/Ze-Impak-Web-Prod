@@ -47,6 +47,7 @@ export const askOTP = (payload)=> {
             }
             else{
                 dispatch(number(resp.data));
+                
             }
            
         }
@@ -359,4 +360,34 @@ export function getArticlesAPI(){
             dispatch(getArticles(payload));
         });
     };
+}
+
+export const testAxio = ()=> {
+    return async dispatch => {
+        try{
+            const resp = await axios.post('http://35.200.174.85/ml', {
+                // headers:{
+                //     'Access-Control-Allow-Origin':'*',
+                // },
+               
+
+                description:"hello yomali + hiroshan"
+            });
+            console.log("response from api for verify",resp);
+            if(resp.data.statusDetail === "Success"){ 
+                dispatch(verification(resp.data));      //should be chaged according to resp from BE for verify
+                
+                
+            }
+            else{
+                alert("Your code is wrong");
+            }
+           
+        }
+        catch (error){
+            console.log(error);
+            //alert("System error with ")
+        }
+    }
+    
 }
